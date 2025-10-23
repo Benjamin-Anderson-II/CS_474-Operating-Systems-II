@@ -1,0 +1,134 @@
+#!/usr/bin/env python3
+
+import re
+from gradelib import *
+
+r = Runner(save("xv6.out"))
+
+@test(15, "BasicCloneWorks")
+def test_basicclone():
+    r.run_qemu(shell_script([
+        'clone_basic'
+    ]))
+    r.match(no=["usertrap"])
+    r.match(no=["kerneltrap"])
+    r.match("^PASSED TEST!", no=[".*usertrap.*", ".*kerneltrap.*"]);
+
+@test(10, "CloneParentSleep")
+def test_cloneparentsleep():
+    r.run_qemu(shell_script([
+        'clone_parent_sleep'
+    ]))
+    r.match(no=["usertrap"])
+    r.match(no=["kerneltrap"])
+    r.match("^PASSED TEST!", no=[".*usertrap.*", ".*kerneltrap.*"]);
+
+@test(5, "CloneArguments")
+def test_cloneargs():
+    r.run_qemu(shell_script([
+        'clone_arguments'
+    ]))
+    r.match(no=["usertrap"])
+    r.match(no=["kerneltrap"])
+    r.match("^PASSED TEST!", no=[".*usertrap.*", ".*kerneltrap.*"]);
+
+@test(10, "CloneChildSleep")
+def test_clone_child_sleep():
+    r.run_qemu(shell_script([
+        'clone_child_sleep'
+    ]))
+    r.match(no=["usertrap"])
+    r.match(no=["kerneltrap"])
+    r.match("^PASSED TEST!", no=[".*usertrap.*", ".*kerneltrap.*"]);
+
+@test(5, "CloneBad")
+def test_clonebad():
+    r.run_qemu(shell_script([
+        'clone_bad'
+    ]))
+    r.match(no=["usertrap"])
+    r.match(no=["kerneltrap"])
+    r.match("^PASSED TEST!", no=[".*usertrap.*", ".*kerneltrap.*"]);
+
+@test(0, "CloneNoExit")
+def test_clonenoexit():
+    r.run_qemu(shell_script([
+        'clone_return'
+    ]))
+    r.match(no=["usertrap"])
+    r.match(no=["kerneltrap"])
+    r.match("^PASSED TEST!", no=[".*usertrap.*", ".*kerneltrap.*"]);
+
+@test(10, "CloneWait")
+def test_clonewait():
+    r.run_qemu(shell_script([
+        'clone_wait'
+    ]))
+    r.match(no=["usertrap"])
+    r.match(no=["kerneltrap"])
+    r.match("^PASSED TEST!", no=[".*usertrap.*", ".*kerneltrap.*"]);
+
+@test(5, "ForkJoin")
+def test_forkjoin():
+    r.run_qemu(shell_script([
+        'fork_join'
+    ]))
+    r.match(no=["usertrap"])
+    r.match(no=["kerneltrap"])
+    r.match("^PASSED TEST!", no=[".*usertrap.*", ".*kerneltrap.*"]);
+
+@test(10, "ThreadsBasic")
+def test_threadsbasic():
+    r.run_qemu(shell_script([
+        'threads_basic'
+    ]))
+    r.match(no=["usertrap"])
+    r.match(no=["kerneltrap"])
+    r.match("^PASSED TEST!", no=[".*usertrap.*", ".*kerneltrap.*"]);
+
+@test(10, "ThreadsMany")
+def test_threadsmany():
+    r.run_qemu(shell_script([
+        'threads_many'
+    ]), timeout=500)
+    r.match(no=["usertrap"])
+    r.match(no=["kerneltrap"])
+    r.match("^PASSED TEST!", no=[".*usertrap.*", ".*kerneltrap.*"]);
+
+@test(10, "ThreadsZombies")
+def test_threadszombies():
+    r.run_qemu(shell_script([
+        'threads_zombies'
+    ]), timeout=300)
+    r.match(no=["usertrap"])
+    r.match(no=["kerneltrap"])
+    r.match("^PASSED TEST!", no=[".*usertrap.*", ".*kerneltrap.*"]);
+
+@test(5, "ThreadsSbrk")
+def test_threadssbrk():
+    r.run_qemu(shell_script([
+        'threads_sbrk'
+    ]))
+    r.match(no=["usertrap"])
+    r.match(no=["kerneltrap"])
+    r.match("^PASSED TEST!", no=[".*usertrap.*", ".*kerneltrap.*"]);
+
+@test(15, "LocksBasic")
+def test_locksbasic():
+    r.run_qemu(shell_script([
+        'lock_basic'
+    ]), timeout=60)
+    r.match(no=["usertrap"])
+    r.match(no=["kerneltrap"])
+    r.match("^PASSED TEST!", no=[".*usertrap.*", ".*kerneltrap.*"]);
+
+@test(10, "LockSetup")
+def test_locksetup():
+    r.run_qemu(shell_script([
+        'lock_setup'
+    ]), timeout=300)
+    r.match(no=["usertrap"])
+    r.match(no=["kerneltrap"])
+    r.match("^PASSED TEST!", no=[".*usertrap.*", ".*kerneltrap.*"]);
+
+run_tests()

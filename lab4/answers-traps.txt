@@ -1,0 +1,62 @@
+(this file is formatted as if it were a markdown file)
+
+### 1.
+Which registers contain arguments to functions? For example, which register holds 13 in `main`'s call to `printf`?
+___
+
+- The registers which contain arguments to functions are the 'a' (or argument) registers. The specific register holding the value 13 for `main`'s call to `printf` is 'a2'.
+
+
+### 2.
+Where is the call to function `f` in the assembly code for `main`? Where is the call to `g`? (Hint: the compiler may inline functions.)
+___
+
+- There is no explicit call to either function `f` or `g`. The compiler recognized that `f` called `g` and that `g` simply added 3, so it just added the 3 directly to the 8, then added that result with 1 and got 12 (8+3+1=12). This can be seen in code just after the load into a2, where we load the other argument into the other a register: `li  a1,12`.
+
+### 3.
+At what address is the function `printf` located?
+___
+
+- 0x640
+
+### 4. 
+What value is in the register `ra` just after the `jalr` to `printf` in `main`?
+___
+
+- Expanding the `jalr` call:
+  - `jalr  ra, 1544(ra), 0`
+- Writing it out:
+  - `ra = pc + 4`; `pc = ra + 1544 + 0`
+- Thus, `ra = pc + 4`. Since the `jalr` instruction is on address `0x3c`, the value of `ra` is `0x40`: the next instruction.
+
+
+### 5.
+Run the following code.
+```
+unsigned int i = 0x00646c72;
+printf("H%x Wo%s", 57616, &i);
+```
+##### 5a.
+What is the output?
+___
+
+- HE110 World (without a newline character)
+
+
+##### 5b.
+The output depends on the fact that the RISC-V is little-endian. If the RISC-V were instead big-endian what would you set `i` to in order to yield the same output? Would you need to change 57616 to a different value?
+___
+
+- The value for `i` would need to be `0x726c6400`.
+- No, the value `57616` would not need to change. It's just the decimal representation of 0xe110, which is what's being printed.
+
+
+### 6.
+In the following code, what is going to be printed after `y=`? (note: the answer is not a specific value) Why does this happen?
+```
+printf("x=%d y=%d", 3);
+```
+___
+
+- The number that prints is going to be garbage data, as printf places the value in register `a2` there. Normally we would specify that value, but since we don't I'm fairly confident that it's just leftover from some other process. Which seems like a little bit of a security issue.
+

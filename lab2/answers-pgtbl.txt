@@ -1,0 +1,16 @@
+1. Which other xc6 system call(s) could be made faster using this shared page? Explain how.
+
+System calls which only pull data (and don't take arguments) could all be made faster by using this page. Examples would be calls like uptime() and sysinfo().
+
+uptime():
+    When the clockintr triggers, the current uptime could be copied into the page which would then be read just like getpid().
+sysinfo():
+    If cpu load averages are taken into account, then they would be added in at the same time as uptime, though I'm unsure of the exact process. The number of processes and the available memory are easier, however. When they change due to a fork or some kind of memory alloc/free, the data in the page would simply update while the function is being carried out.
+
+
+
+2. Explain the output of `vmprint()` in terms of Fig 3.4 from the xv6 book. What does page 0 contain? What is in page 2? When running in user mode, could the process read/write the memory mapped by page 1? What does the third to last page contain?
+
+- Page 0 contains the trampoline and page 2 contains the syscall page that we created.
+- No, the user could not read/write memory mapped by page 1, as page 1 is the trapframe and does not have PTE_U set.
+- Unless I'm reading exec.c incorrectly, the third to last page is the user's "program segment" as loadseg() puts it. Following it are two more pages, with the latter being the user program stack.
